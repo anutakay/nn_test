@@ -1,5 +1,6 @@
 package nn_test.collections;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class Trie {
@@ -33,7 +34,32 @@ public class Trie {
 		return true;
 	}
 	
+	private TrieNode findNode(String s) {
+		TrieNode v = root;
+		for (char ch : s.toLowerCase().toCharArray()) {
+			if (!v.children.containsKey(ch)) {
+				return null;
+			} else {
+				v = v.children.get(ch);
+			}
+		}
+		return v;
+	}
+	
 	public List<String> get( final int max ) {
 		return root.getKeys(max);
 	}
+	
+	public List<String> get(String start, final int max ) {
+		start = start.toLowerCase();
+		List<String> res = new LinkedList<String>(); 
+		TrieNode n = findNode(start);
+		if(n != null) {
+			for(String s: n.getKeys(max)) {
+				res.add(start + s);
+			}
+		} 
+		return res;
+	} 
+	
 }
