@@ -1,6 +1,6 @@
 package nn_test.collections;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,7 +50,8 @@ public class TrieTest {
 	        assertTrue(trie.find("house"));
 	        assertTrue(trie.find("world"));
 	        assertTrue(trie.find("h"));
-	        //printSorted(trie.root);
+
+	        assertFalse(trie.find("a"));
 	}
 
 }

@@ -1,5 +1,7 @@
 package nn_test.collections;
 
+import java.util.List;
+
 public class Trie {
 	
 	final TrieNode root = new TrieNode();
@@ -13,7 +15,7 @@ public class Trie {
 		for (char ch : s.toLowerCase().toCharArray()) {
 			if (!v.children.containsKey(ch)) {
 				v.children.put(ch, new TrieNode());
-				}
+			}
 			v = v.children.get(ch);
 		}
 		v.leaf = true;
@@ -29,5 +31,9 @@ public class Trie {
 			}
 		}
 		return true;
-	} 
+	}
+	
+	public List<String> get( final int max ) {
+		return root.getKeys(max);
+	}
 }
