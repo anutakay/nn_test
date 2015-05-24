@@ -6,15 +6,17 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-public class TrieNode<T> {
+import nn_test.Searcher.Record;
+
+public class TrieNode {
 	
 	public final static int MAX = 12;
 	
-	final Map<Character, TrieNode<T>> children = new TreeMap<Character, TrieNode<T>>();
+	final Map<Character, TrieNode> children = new TreeMap<Character, TrieNode>();
 	
     boolean leaf;
     
-    private List<T> objects = new LinkedList<T>();
+    private Record[] objects = new Record[MAX];
     
     public List<String> getKeys(final int max) {
     	int n = max;
@@ -33,7 +35,7 @@ public class TrieNode<T> {
     		n--;
     	}
     	
-    	for(Entry<Character, TrieNode<T>> ch: children.entrySet()) {
+    	for(Entry<Character, TrieNode> ch: children.entrySet()) {
     		if(n == 0) {
     			break;
     		}  		
@@ -46,34 +48,30 @@ public class TrieNode<T> {
     	return res;
     }
     
-    static int S =0;
-    
     //Добавляем сначала старые, а потом новые
     //В узле всегда хранятся ссылки на MAX или меньше подходящих объектов
-    public void addObject(T obj) {
-    	S++;
-    	System.out.println(S);
+    public void addObject(Record obj) {
     	/*objects.add(obj);
     	if(objects.size() > MAX) {
     		objects = objects.subList(objects.size()-MAX-1, objects.size()-1);
     	}*/
-    	if(objects.size() >= MAX) {
-    		objects.remove(MAX-1);
+    	for(int i = MAX-1; i > 0; i--) {
+    		objects[i] = objects[i-1];
     	}
-    	objects.add(0, obj);
+    	objects[0] = obj;
+
+    	
     }
     
-    public List<T> getObjects(final int max) {
-    	if(max >= objects.size()) {
-    		return objects;
-    	} else {
-    		return objects.subList(objects.size()-max-1, objects.size()-1);
-    	}
+    public Record[] getObjects(final int max) {
+    	return objects;
     }
     
     public void clear() {
     	children.clear();
-    	objects.clear();
+    	for(int i = 0; i< MAX; i++) {
+    		objects[i] = null;
+    	}
     	leaf = false;
     }
 

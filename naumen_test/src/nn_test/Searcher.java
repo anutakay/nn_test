@@ -11,9 +11,9 @@ import nn_test.interfaces.ISearcher;
 public class Searcher implements ISearcher {
 	
 	List<Record> list = new ArrayList<Record>(); 
-	final Trie<Record> trie = new Trie<Record>();
+	final Trie trie = new Trie();
 	
-	class Record {
+	public class Record {
 		long date;
 		String name;
 	}
@@ -64,11 +64,16 @@ public class Searcher implements ISearcher {
 		if(start == null) {
 			return null;
 		}
-		List<Record> res = trie.getObjects(start, n);
-		ArrayList<String> l = new ArrayList<String>();
-		res.forEach(r -> l.add(r.name));
-		String[] arr = new String[l.size()];
-		return l.toArray(arr);
+		Record[] res = trie.getObjects(start, n);
+		String[] r = new String[res.length]; 
+		for(int i = 0; i < res.length; i++) {
+			if(res[i] != null) {
+				r[i] = res[i].name;
+			} else {
+				r[i] = null;
+			}
+		}
+		return r;
 	}
 
 }
