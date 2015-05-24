@@ -21,10 +21,18 @@ public class TrieNode {
     		return res;
     	}
     	
+    	if(n == 0) {
+    		return res;
+    	}
+    	if(leaf) {
+    		res.add("");
+    		n--;
+    	}
+    	
     	for(Entry<Character, TrieNode> ch: children.entrySet()) {
     		if(n == 0) {
     			break;
-    		}
+    		}  		
     		List<String> temp = ch.getValue().getKeys(n);
     		for(String s: temp) {
     			res.add(ch.getKey() + s);

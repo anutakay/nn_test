@@ -52,5 +52,24 @@ public class TrieNodeTest {
         assertEquals(list, trie.get("h", 2));
         assertEquals(list, trie.get("h", 3));
 	}
+	
+	@Test
+	public void getKeysForStartTest1() {
+		Trie trie = new Trie();
+        trie.put("hello");
+        trie.put("house");
+        trie.put("h");
+        trie.put("he");
+        trie.put("hk");
+        
+        LinkedList<String> list = new LinkedList<String>();
+        list.add("h");
+        list.add("he");
+        list.add("hello");
+        list.add("hk");
+        list.add("house");
+        
+        assertEquals(list, trie.get("h", 13));
+	}
 
 }
