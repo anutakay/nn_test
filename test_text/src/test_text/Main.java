@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -13,14 +14,13 @@ import nn_test.Searcher;
 
 public class Main {
 	
-	static String filename = "names.txt";
+	static String filename = "names100000.txt";
 
 	public static void main(String[] args) {
 		Set<String> set = new HashSet<String>();
-		File file;
 		getDataFromFile(set);    
 		//list.forEach(s -> System.out.println(s));
-		
+		/*
 		String filename2 = "names" + set.size() + ".txt";
 		//putDataToFile(filename2, set, s ->  s + "\n");
 		
@@ -32,20 +32,20 @@ public class Main {
 		Set<String> temp = new HashSet<String>();
 		temp.addAll(set);
 		temp.forEach(s -> {
-			/*1*/ 	set.add("A" + s);
-			/*2*/ 	set.add("Kv" + s);
-			/*3*/ 	set.add(s + "s");
-			/*4*/ 	set.add(s + "2");
-			/*5*/	set.add(alphabet.charAt(r.nextInt(N)) + s);
-			/*6*/	set.add(alphabet.charAt(r.nextInt(N)) +
+			 	set.add("A" + s);
+			 	set.add("Kv" + s);
+			 	set.add(s + "s");
+			 	set.add(s + "2");
+				set.add(alphabet.charAt(r.nextInt(N)) + s);
+				set.add(alphabet.charAt(r.nextInt(N)) +
 							alphabet.charAt(r.nextInt(N)) + s);
-			/*7*/	set.add(alphabet.charAt(r.nextInt(N)) +
+				set.add(alphabet.charAt(r.nextInt(N)) +
 						alphabet.charAt(r.nextInt(N)) +
 						alphabet.charAt(r.nextInt(N)) + s);
-			/*8*/	set.add(s + alphabet.charAt(r.nextInt(N)));
-			/*9*/	set.add(s + alphabet.charAt(r.nextInt(N)) +
+				set.add(s + alphabet.charAt(r.nextInt(N)));
+				set.add(s + alphabet.charAt(r.nextInt(N)) +
 							alphabet.charAt(r.nextInt(N)));
-			/*10*/	set.add(s + alphabet.charAt(r.nextInt(N)) +
+				set.add(s + alphabet.charAt(r.nextInt(N)) +
 						alphabet.charAt(r.nextInt(N)) +
 						alphabet.charAt(r.nextInt(N)));
 		});
@@ -62,8 +62,8 @@ public class Main {
 		String filename3 = "names" + set.size() + ".txt";
 		set.remove("");
 		putDataToFile(filename3, set, s ->  s + "\n");
-		
-		test(set, "helloworld");
+		*/
+		test(set, "BootstrapServer");
 	}
 
 	private static void test(Set<String> set, String str) {
@@ -74,10 +74,14 @@ public class Main {
 			dates[i] = 1;
 		}
 		Searcher searcher = new Searcher();
-		searcher.refresh(names, dates);
 		long old = System.currentTimeMillis();
-		searcher.guess(str);
-		System.out.println(System.currentTimeMillis() - old);
+		searcher.refresh(names, dates);
+		long a1 = System.currentTimeMillis();
+		System.out.println("refresh: " + (a1-old));
+		String[] res = searcher.guess(str);
+		System.out.println("guess: " + (System.currentTimeMillis()-a1));
+		
+		System.out.println(Arrays.toString(res));
 	}
 
 	private static void putDataToFile(String filename, Set<String> set,  java.util.function.Function<String, String> fun) {

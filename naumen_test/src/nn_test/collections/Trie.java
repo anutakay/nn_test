@@ -3,27 +3,31 @@ package nn_test.collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Trie {
+public class Trie<T> {
 	
-	final TrieNode root = new TrieNode();
+	int size = 0;
+	
+	final TrieNode<T> root = new TrieNode<T>();
 	
 	public Trie() {
 		
 	}
 	
-	public void put(String s) {
-		TrieNode v = root;
+	public void put(String s, T obj) {
+		TrieNode<T> v = root;
 		for (char ch : s.toLowerCase().toCharArray()) {
+			v.addObject(obj);
 			if (!v.children.containsKey(ch)) {
-				v.children.put(ch, new TrieNode());
+				v.children.put(ch, new TrieNode<T>());
 			}
 			v = v.children.get(ch);
 		}
 		v.leaf = true;
+		v.addObject(obj);
 	}
 	 
 	public boolean find(String s) {
-		TrieNode v = root;
+		TrieNode<T> v = root;
 		for (char ch : s.toLowerCase().toCharArray()) {
 			if (!v.children.containsKey(ch)) {
 				return false;
@@ -34,8 +38,8 @@ public class Trie {
 		return true;
 	}
 	
-	private TrieNode findNode(String s) {
-		TrieNode v = root;
+	private TrieNode<T> findNode(String s) {
+		TrieNode<T> v = root;
 		for (char ch : s.toLowerCase().toCharArray()) {
 			if (!v.children.containsKey(ch)) {
 				return null;
@@ -53,7 +57,7 @@ public class Trie {
 	public List<String> get(String start, final int max ) {
 		start = start.toLowerCase();
 		List<String> res = new LinkedList<String>(); 
-		TrieNode n = findNode(start);
+		TrieNode<T> n = findNode(start);
 		if(n != null) {
 			for(String s: n.getKeys(max)) {
 				res.add(start + s);
@@ -61,5 +65,17 @@ public class Trie {
 		} 
 		return res;
 	} 
+	
+	public List<T> getObjects(final String start, final int max) {
+		TrieNode<T> n = findNode(start.toLowerCase());
+		if(n == null) {
+			return new LinkedList<T>();
+		}
+		return n.getObjects(max);
+	}
+	
+	public void clear() {
+		root.clear();
+	}
 	
 }

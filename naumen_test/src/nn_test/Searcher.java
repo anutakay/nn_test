@@ -3,63 +3,72 @@ package nn_test;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import nn_test.collections.Trie;
 import nn_test.interfaces.ISearcher;
 
 public class Searcher implements ISearcher {
 	
-	List<Entry<Long, Trie>> list; 
+	List<Record> list = new ArrayList<Record>(); 
+	final Trie<Record> trie = new Trie<Record>();
+	
+	class Record {
+		long date;
+		String name;
+	}
 	
 	public Searcher() {
 		
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void refresh(String[] classNames, long[] modificationDates) {
+		
+		clear();
 		
 		if(classNames == null || modificationDates == null) {
 			return;
 		}
 		
-		Map<Long, Trie> map = new HashMap<Long, Trie>();
-		for(int i = 0; i < modificationDates.length; i++) {
-			long date = modificationDates[i];
-			if(!map.containsKey(date)) {
-				map.put(date, new Trie());
-			}
-			Trie trie = map.get(date);
-			trie.put(classNames[i]);
+		for(int i = 0; i < classNames.length; i++) {
+			Record r = new Record();
+			r.name = classNames[i];
+			r.date = modificationDates[i];
+			list.add(r);
 		}
-		list = new ArrayList<Entry<Long, Trie>>(map.entrySet());
-		Collections.sort(list, new Comparator<Entry<Long, Trie>>() {
+		
+		Collections.sort(list, new Comparator<Record>() {
 
 			@Override
-			public int compare(Entry<Long, Trie> arg0, Entry<Long, Trie> arg1) {
-				return (int) (arg1.getKey()-arg0.getKey());
+			public int compare(Record r1, Record r2) {
+				int dd = (int) (r2.date - r1.date);
+				if(dd == 0) {
+					return r2.name.compareTo(r1.name);
+				}
+				else {
+					return dd;
+				}
 			}});
+		list.forEach( r -> trie.put(r.name.toLowerCase() , r));
+	}
+	
+	private void clear() {
+		list.clear();
+		trie.clear();
 	}
 
 	@Override
 	public String[] guess(String start) {
-		List<String> res = new LinkedList<String>();
 		int n = 12;
 		if(start == null) {
 			return null;
 		}
-		for(Entry<Long, Trie> e: list) {
-			List<String> temp = e.getValue().get(start, n);
-			res.addAll(temp);
-			n = n - temp.size();
-		}
-		String array[] = new String[res.size()];
-		return res.toArray(array);
+		List<Record> res = trie.getObjects(start, n);
+		ArrayList<String> l = new ArrayList<String>();
+		res.forEach(r -> l.add(r.name));
+		String[] arr = new String[l.size()];
+		return l.toArray(arr);
 	}
 
 }

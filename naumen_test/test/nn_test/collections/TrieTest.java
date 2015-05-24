@@ -9,11 +9,11 @@ import org.junit.Test;
 
 public class TrieTest {
 	
-	public void printSorted(TrieNode node) {
+	public void printSorted(TrieNode<String> node) {
 		printSorted(node, 0);
 	}
 	
-	private void printSorted(TrieNode node, int level) {
+	private void printSorted(TrieNode<String> node, int level) {
 		for (Character ch : node.children.keySet()) {
 			System.out.println(getSpace(level) + ch);
 			printSorted(node.children.get(ch), level + 1);
@@ -40,11 +40,11 @@ public class TrieTest {
 	
 	@Test
 	public void HelloTest() {
-	        Trie trie = new Trie();
-	        trie.put("hello");        
-	        trie.put("house");
-	        trie.put("hell");
-	        trie.put("world");
+	        Trie<String> trie = new Trie<String>();
+	        trie.put("hello", "hello");        
+	        trie.put("house", "house");
+	        trie.put("hell", "hell");
+	        trie.put("world", "world");
 	        assertTrue(trie.find("hello"));
 	        assertTrue(trie.find("hell"));
 	        assertTrue(trie.find("house"));
