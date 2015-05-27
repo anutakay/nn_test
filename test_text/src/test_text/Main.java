@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
 
 import nn_test.Searcher;
@@ -63,16 +62,17 @@ public class Main {
 		set.remove("");
 		putDataToFile(filename3, set, s ->  s + "\n");
 		*/
-		test(set, "BootstrapServer");
+		test(set, "a");
 	}
 
 	private static void test(Set<String> set, String str) {
 		String[] names = new String[set.size()];
 		long[] dates = new long[set.size()];
 		names = set.toArray(names);
+		set = null;
 		for(int i = 0; i < dates.length; i++) {
-			dates[i] = 1;
-		}
+			dates[i] = i%1000;
+			}
 		Searcher searcher = new Searcher();
 		long old = System.currentTimeMillis();
 		searcher.refresh(names, dates);

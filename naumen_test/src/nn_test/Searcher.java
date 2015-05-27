@@ -5,15 +5,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import nn_test.collections.Trie;
 import nn_test.interfaces.ISearcher;
 
 public class Searcher implements ISearcher {
 	
-	List<Record> list = new ArrayList<Record>(); 
-	final Trie<Record> trie = new Trie<Record>();
+	Index index = new Index();
 	
-	class Record {
+	public class Record {
 		long date;
 		String name;
 	}
@@ -25,7 +23,7 @@ public class Searcher implements ISearcher {
 	@Override
 	public void refresh(String[] classNames, long[] modificationDates) {
 		
-		clear();
+		List<Record> list = new ArrayList<Record>();
 		
 		if(classNames == null || modificationDates == null) {
 			return;
@@ -37,6 +35,9 @@ public class Searcher implements ISearcher {
 			r.date = modificationDates[i];
 			list.add(r);
 		}
+		
+		classNames = null;
+		modificationDates = null;
 		
 		Collections.sort(list, new Comparator<Record>() {
 
@@ -50,25 +51,16 @@ public class Searcher implements ISearcher {
 					return dd;
 				}
 			}});
-		list.forEach( r -> trie.put(r.name.toLowerCase() , r));
-	}
-	
-	private void clear() {
-		list.clear();
-		trie.clear();
+		index.refresh(list);
 	}
 
 	@Override
 	public String[] guess(String start) {
-		int n = 12;
+		int max = 12;
 		if(start == null) {
-			return null;
+			start = "";
 		}
-		List<Record> res = trie.getObjects(start, n);
-		ArrayList<String> l = new ArrayList<String>();
-		res.forEach(r -> l.add(r.name));
-		String[] arr = new String[l.size()];
-		return l.toArray(arr);
+		return index.getObjects(start, max);
 	}
 
 }

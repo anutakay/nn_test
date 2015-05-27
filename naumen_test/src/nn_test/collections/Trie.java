@@ -3,27 +3,37 @@ package nn_test.collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Trie<T> {
+public abstract class Trie<T> {
 	
-	int size = 0;
-	
-	final TrieNode<T> root = new TrieNode<T>();
-	
-	public Trie() {
-		
+	private class MTrieNode extends TrieNode<T>{
+
+		@Override
+		protected boolean objEq(T obj1, T obj2) {
+			// TODO Auto-generated method stub
+			return Trie.this.objEq(obj1, obj2);
+		}
 	}
 	
-	public void put(String s, T obj) {
+	int max = 12;
+	
+	TrieNode<T> root = new MTrieNode();
+	
+	abstract public boolean objEq(T obj1, T obj2);
+	
+	public TrieNode<T> put(String s, T obj) {
 		TrieNode<T> v = root;
 		for (char ch : s.toLowerCase().toCharArray()) {
-			v.addObject(obj);
+			
+			v.addObject(obj, ch);
 			if (!v.children.containsKey(ch)) {
-				v.children.put(ch, new TrieNode<T>());
+				v.children.put(ch, new MTrieNode());
 			}
-			v = v.children.get(ch);
+			v = v.children.get(ch);			
 		}
+		v.addObject(obj, '$');
 		v.leaf = true;
-		v.addObject(obj);
+		v.leafValue = obj;
+		return v;
 	}
 	 
 	public boolean find(String s) {
@@ -38,7 +48,7 @@ public class Trie<T> {
 		return true;
 	}
 	
-	private TrieNode<T> findNode(String s) {
+	public TrieNode<T> findNode(String s) {
 		TrieNode<T> v = root;
 		for (char ch : s.toLowerCase().toCharArray()) {
 			if (!v.children.containsKey(ch)) {
@@ -48,6 +58,15 @@ public class Trie<T> {
 			}
 		}
 		return v;
+	}
+	
+	public T getBestObject(String s) {
+		TrieNode<T> tn = findNode(s);
+		if(tn!=null) {
+			return tn.getObject(0);
+		} else {
+			return null;
+		}
 	}
 	
 	public List<String> get( final int max ) {
@@ -65,14 +84,6 @@ public class Trie<T> {
 		} 
 		return res;
 	} 
-	
-	public List<T> getObjects(final String start, final int max) {
-		TrieNode<T> n = findNode(start.toLowerCase());
-		if(n == null) {
-			return new LinkedList<T>();
-		}
-		return n.getObjects(max);
-	}
 	
 	public void clear() {
 		root.clear();

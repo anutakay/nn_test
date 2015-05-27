@@ -6,75 +6,72 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-public class TrieNode<T> {
+public abstract class TrieNode<T> {
 	
 	public final static int MAX = 12;
 	
 	final Map<Character, TrieNode<T>> children = new TreeMap<Character, TrieNode<T>>();
 	
+	char[] last = new char[MAX];
+	
     boolean leaf;
+    T leafValue;
     
-    private List<T> objects = new LinkedList<T>();
-    
-    public List<String> getKeys(final int max) {
-    	int n = max;
-    	List<String> res = new LinkedList<String>();  
-    	
-    	if(children.size() == 0){
-    		res.add("");
-    		return res;
-    	}
-    	
-    	if(n == 0) {
-    		return res;
-    	}
-    	if(leaf) {
-    		res.add("");
-    		n--;
-    	}
-    	
-    	for(Entry<Character, TrieNode<T>> ch: children.entrySet()) {
-    		if(n == 0) {
-    			break;
-    		}  		
-    		List<String> temp = ch.getValue().getKeys(n);
-    		for(String s: temp) {
-    			res.add(ch.getKey() + s);
-    			n--;
-    		}
-    	}
-    	return res;
-    }
-    
-    static int S =0;
+    private T best;
     
     //Добавляем сначала старые, а потом новые
-    //В узле всегда хранятся ссылки на MAX или меньше подходящих объектов
-    public void addObject(T obj) {
-    	S++;
-    	System.out.println(S);
-    	/*objects.add(obj);
-    	if(objects.size() > MAX) {
-    		objects = objects.subList(objects.size()-MAX-1, objects.size()-1);
-    	}*/
-    	if(objects.size() >= MAX) {
-    		objects.remove(MAX-1);
+    //В узле всегда хранятся ссылка на самый подходящий объект
+    public void addObject(T obj, char ch) {
+    	//добавить. если дата та же самая, что и была, пропускаем, если
+		//дата новая - записать букву
+    	if(best == null) {
+    		
     	}
-    	objects.add(0, obj);
+    	else if(!this.objEq(obj, best)) {
+    		addChar(ch);
+    	} else {
+    		last[0] = ch;
+    	}
+    	best = obj;
     }
     
-    public List<T> getObjects(final int max) {
-    	if(max >= objects.size()) {
-    		return objects;
-    	} else {
-    		return objects.subList(objects.size()-max-1, objects.size()-1);
+    private void addChar(char ch) {
+    	for(int i = MAX-1; i >= 1; i--) {
+    		last[i] = last[i-1];
     	}
+    	last[0] = ch;
+    }
+    
+    public T getObject(int d) {
+    	if(d == 0) {
+    		return best;
+    	}
+    	if(last[d] == 'S') {
+    		return leafValue;
+    	}
+    	return children.get(last[d]).getPrevObj(best);   	
+    }
+    
+    public T getPrevObj(T exclude) {
+    	if(!objEq(best, exclude)){
+    		return best;
+    	}
+    	if(leaf && !objEq(leafValue, exclude)) {
+    		return leafValue;
+    	}
+    	if(last[1]==0){
+    		return null;
+    	}
+    	return children.get(last[1]).getPrevObj(best);
     }
     
     public void clear() {
     	children.clear();
-    	objects.clear();
+    	best = null;
     	leaf = false;
+    	leafValue = null;
     }
+    
+    protected abstract boolean objEq(T obj1, T obj2);
 
 }
