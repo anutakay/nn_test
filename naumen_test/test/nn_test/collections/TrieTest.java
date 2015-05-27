@@ -14,13 +14,13 @@ public class TrieTest {
 	}
 	
 	private void printSorted(TrieNode<String> node, int level) {
-		for (Character ch : node.children.keySet()) {
+		/*for (Character ch : node.children.keySet()) {
 			System.out.println(getSpace(level) + ch);
 			printSorted(node.children.get(ch), level + 1);
 		}
 		if (node.leaf) {
 			System.out.println();
-		}
+		}*/
 	}
 	
 	final Map<Integer, String> levelSpacesMap = new HashMap<Integer, String>();

@@ -1,8 +1,5 @@
 package nn_test.collections;
 
-import java.util.LinkedList;
-import java.util.List;
-
 public abstract class Trie<T> {
 	
 	private class MTrieNode extends TrieNode<T>{
@@ -20,9 +17,9 @@ public abstract class Trie<T> {
 	
 	abstract public boolean objEq(T obj1, T obj2);
 	
-	public TrieNode<T> put(String s, T obj) {
+	public TrieNode<T> put(byte[] s, T obj) {
 		TrieNode<T> v = root;
-		for (char ch : s.toLowerCase().toCharArray()) {
+		for (byte ch : s) {
 			
 			v.addObject(obj, ch);
 			if (!v.children.containsKey(ch)) {
@@ -30,7 +27,7 @@ public abstract class Trie<T> {
 			}
 			v = v.children.get(ch);			
 		}
-		v.addObject(obj, '$');
+		v.addObject(obj, (byte)36);
 		v.leaf = true;
 		v.leafValue = obj;
 		return v;
@@ -51,10 +48,10 @@ public abstract class Trie<T> {
 	public TrieNode<T> findNode(String s) {
 		TrieNode<T> v = root;
 		for (char ch : s.toLowerCase().toCharArray()) {
-			if (!v.children.containsKey(ch)) {
+			if (!v.children.containsKey((byte)ch)) {
 				return null;
 			} else {
-				v = v.children.get(ch);
+				v = v.children.get((byte)ch);
 			}
 		}
 		return v;
@@ -68,7 +65,7 @@ public abstract class Trie<T> {
 			return null;
 		}
 	}
-	
+	/*
 	public List<String> get( final int max ) {
 		return root.getKeys(max);
 	}
@@ -83,7 +80,7 @@ public abstract class Trie<T> {
 			}
 		} 
 		return res;
-	} 
+	} */
 	
 	public void clear() {
 		root.clear();

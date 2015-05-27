@@ -1,18 +1,15 @@
 package nn_test.collections;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.TreeMap;
 
 public abstract class TrieNode<T> {
 	
 	public final static int MAX = 12;
 	
-	final Map<Character, TrieNode<T>> children = new TreeMap<Character, TrieNode<T>>();
+	final Map<Byte, TrieNode<T>> children = new TreeMap<Byte, TrieNode<T>>();
 	
-	char[] last = new char[MAX];
+	byte[] last = new byte[MAX];
 	
     boolean leaf;
     T leafValue;
@@ -21,7 +18,7 @@ public abstract class TrieNode<T> {
     
     //Добавляем сначала старые, а потом новые
     //В узле всегда хранятся ссылка на самый подходящий объект
-    public void addObject(T obj, char ch) {
+    public void addObject(T obj, byte ch) {
     	//добавить. если дата та же самая, что и была, пропускаем, если
 		//дата новая - записать букву
     	if(best == null) {
@@ -30,12 +27,12 @@ public abstract class TrieNode<T> {
     	else if(!this.objEq(obj, best)) {
     		addChar(ch);
     	} else {
-    		last[0] = ch;
+    		last[0] = (byte)ch;
     	}
     	best = obj;
     }
     
-    private void addChar(char ch) {
+    private void addChar(byte ch) {
     	for(int i = MAX-1; i >= 1; i--) {
     		last[i] = last[i-1];
     	}
@@ -46,7 +43,7 @@ public abstract class TrieNode<T> {
     	if(d == 0) {
     		return best;
     	}
-    	if(last[d] == 'S') {
+    	if(last[d] == 36) {
     		return leafValue;
     	}
     	return children.get(last[d]).getPrevObj(best);   	

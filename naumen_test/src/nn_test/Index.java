@@ -32,7 +32,7 @@ public class Index {
 		trie.clear();
 		list = data;
 		for(int i = 0; i < list.size(); i++) {
-			trie.put(list.get(i).name.toLowerCase(), i);
+			trie.put(list.get(i).name.toLowerCase().getBytes(), i);
 		}
 	}
 	
